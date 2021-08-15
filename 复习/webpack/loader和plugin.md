@@ -12,7 +12,9 @@
 
 ## Plugin
 
-> 原理：在 Webpack 运行的生命周期中会广播出许多事件，Plugin 可以监听这些事件，在合适的时机通过 Webpack 提供的 API 改变输出结果。Webpack 通过 Plugin 机制让其更加灵活，以适应各种应用场景。 
+> 原理：在 Webpack 运行的生命周期中会广播出许多事件，Plugin 可以监听这些事件，在合适的时机通过 Webpack 提供的 API 改变输出结果。Webpack 通过 Plugin 机制让其更加灵活，以适应各种应用场景。
+>
+> Plugin实际是一个类（构造函数），通过在plugins配置中实例化进行调用， 它在原型对象上指定了一个apply方法，入参是compiler对象
 
 1. 使用 `SplitChunksPlugin` 自动拆分业务基础库
 2. 使用 `optimize-css-assets-webpack-plugin` 压缩css

@@ -18,8 +18,8 @@
 > 开发 - 构建 - 部署 一整套规范流程
 
 - 开发
-  - 分支命名规范：feature、fix等明明
-  - 代码风格统一：成熟的eslint、styleLint自动化配置方案
+  - 分支命名规范：feature、fix等命名
+  - 代码风格统一：超严格的eslint、styleLint自动化配置方案
   - 技术栈统一：全部采用react + ts + hooks的方式，二维图表采用bizCharts，微前端采用ConsoleOS
 - 构建
   - 打包构建统一：团队有适合自己的内部构建器，可支持 私有云 公有云等的构建发布任务
@@ -40,7 +40,7 @@
 #### 不同点
 
 - var 声明的变量会默认挂在到window上，而let 和 const 不会
-- var 声明的变量存在变量提升，这是因为var声明的变量在变量环境中，在编译阶段会被赋值默认值，而let 和 const存在词法环境中，在编译阶段不会赋值默认值，所以存在暂时性死区这个概念
+- var 声明的变量存在变量提升，这是因为var声明的变量存在变量环境中，在编译阶段会被赋值默认值，而let 和 const存在词法环境中，在编译阶段不会赋值默认值，所以存在暂时性死区这个概念
 - let 和 const 都es6新增的，都可以声明变量
 - let 和 const声明变量不可以重复声明，不可以提前使用
 - const 代表常量的意思，一般用来声明不会改变的变量，当然引用类型还是会改变的，只是不能重新赋值
@@ -129,7 +129,7 @@
 - 事件委托的形式
 
 - React自己实现了一套高效的事件注册，存储，分发和重用逻辑，最大化的解决了很多浏览器兼容问题
-- 所有组件的时间都会挂在到document上 react17以后是挂在到根节点root上
+- 所有组件的事件都会挂在到document上 react17以后是挂在到根节点root上
 - 使用对象池管理合成事件的 创建和销毁
 
 ## react组件更新的整个过程
@@ -179,3 +179,163 @@
 4. 现在基本都是 前后端分离的年代了，所以前端同学 可以做一些前期的准备，比如公共模块的抽离、方法的复用。针对一些评审时 觉得难的一些地方提前调研，避免后期影响到项目的上线
 5. 在开发过程中也要随时的了解开发进度，把控项目整体进度
 6. 开发完毕之后，前后端联调完毕、提测结束、上线
+
+## 深拷贝和浅拷贝（区别、一些相关的方法以及自己如何实现一个深拷贝）
+
+#### 浅拷贝
+
+- 扩展运算符
+- Object.assign()
+
+#### 深拷贝
+
+- JSON.stringify与JSON.parse
+- 递归拷贝
+- 防止循环引用（采用Map的形式来存储数据）
+
+## loader和plugin的区别
+
+#### Loader
+
+> 原理：模块转换器，用于把模块原内容按照需求转换成新内容。一个 Loader 其实就是一个 Node.js 模块，这个模块需要导出一个函数。 这个导出的函数的工作就是获得处理前的原内容，对原内容执行处理后，返回处理后的内容。
+
+1. 使用 `style-loader`  `css-loader` `postcss-loader` `sass-loader` `less-loader`  转换css
+2. 使用 `url-loader` 转换图片
+3. 使用  `babel-loader`  `@babel/preset-env` `@babel/preset-typescript`  `@babel/preset-react`转转js
+4. 使用 `file-loader`  处理文件
+5. 使用 `css-modules-typescript-loader` 自动生成css.d.ts 提示文件
+6. 使用 `mini-css-extract-plugin.loader` 配合 下面的`mini-css-extract-plugin`  plugin 实现抽取css文件。
+
+#### Plugin
+
+> 原理：在 Webpack 运行的生命周期中会广播出许多事件，Plugin 可以监听这些事件，在合适的时机通过 Webpack 提供的 API 改变输出结果。Webpack 通过 Plugin 机制让其更加灵活，以适应各种应用场景。
+>
+> Plugin实际是一个类（构造函数），通过在plugins配置中实例化进行调用， 它在原型对象上指定了一个apply方法，入参是compiler对象
+
+1. 使用 `SplitChunksPlugin` 自动拆分业务基础库
+2. 使用 `optimize-css-assets-webpack-plugin` 压缩css
+3. 使用 `terser-webpack-plugin` 代替老牌的 `uglify`  自动删除项目中无用的代码 
+4. 使用 `optimization.splitChunks` 自动提取公共模块
+5. 使用 `webpack-bundle-analyzer.BundleAnalyzerPlugin` 可视化分析 bundle大小
+6. 使用 `mini-css-extract-plugin`  将 css 文件单独抽离 要配合对应的loader使用
+7. 使用 `css-url-relative-plugin` 将css打包成相对路径
+8. 使用 `progress-bar-webpack-plugin` 显示构建进度
+9. 使用 `case-sensitive-paths-webpack-plugin`  处理路径大小写问题
+10. 使用 `webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)`  处理 .locale 文件
+11. 使用 `fork-ts-checker-webpack-plugin`  支持typescript lint 的检查
+12. 使用 `copy-webpack-plugin` 复制文件
+13. 使用 `define-plugin` 定义环境变量
+14. 使用 `html-webpack-plugin` 生成html文件
+
+## 做过哪些webpack的配置
+
+........可多了，loader、plugin、alias、entry、output、publicPath
+
+## 说一下bundle和chunks
+
+1. 对于一份同逻辑的代码，当我们手写下一个一个的文件，它们无论是 ESM 还是 commonJS 或是 AMD，他们都是 **module** ；
+2. 当我们写的 module 源文件传到 webpack 进行打包时，webpack 会根据文件引用关系生成 **chunk** 文件，webpack 会对这个 chunk 文件进行一些操作；
+3. webpack 处理好 chunk 文件后，最后会输出 **bundle** 文件，这个 bundle 文件包含了经过加载和编译的最终源文件，所以它可以直接在浏览器中运行。
+
+`module`，`chunk` 和 `bundle` 其实就是同一份逻辑代码在不同转换场景下的取了三个名字：
+
+我们直接写出来的是 module，webpack 处理时是 chunk，最后生成浏览器可以直接运行的 bundle。
+
+## react类组件和函数式组件的区别（展开说一下，例如hooks什么的）
+
+## 为什么不能在if里写
+
+## setState和useState的区别
+
+## react怎么在根结点之外插入节点（例如模态框、Toast）
+
+1. ReactDOM.createPortal
+
+```js
+function createPortal(
+  children: ReactNodeList,
+  container: Container,
+  key: ?string = null,
+): React$Portal {
+  invariant(
+    isValidContainer(container),
+    'Target container is not a DOM element.',
+  );
+  // TODO: pass ReactDOM portal implementation as third argument
+  // $FlowFixMe The Flow type is opaque but there's no way to actually create it.
+  return createPortalImpl(children, container, null, key);
+}
+```
+
+createPortal函数主要有三个参数，分别是children（需要渲染的组件）、container（需要渲染到的指定节点）、key。开发中我们主要关注children和container即可
+
+## react hooks有哪几种？其中useEffect是做什么的？
+
+## useMemo在什么情况下使用
+
+## 相比class component，hooks有哪些优势？
+
+## 请挑一个项目聊聊你在其中做的亮点
+
+## webpack都用过哪些打包优化手段？
+
+## 读过react源码哪一部分，能否讲一两个点
+
+- ReactFiber.new.js
+
+```js
+function FiberNode(
+  tag: WorkTag,
+  pendingProps: mixed,
+  key: null | string,
+  mode: TypeOfMode,
+) {
+  // 作为静态数据结构的属性
+  this.tag = tag; // Fiber对应组件的类型 Function/Class/Host...
+  this.key = key; // key属性
+  this.elementType = null; // 大部分情况同type，某些情况不同，比如FunctionComponent使用React.memo包裹
+  this.type = null; // 对于 FunctionComponent，指函数本身，对于ClassComponent，指class，对于HostComponent，指DOM节点tagName
+  this.stateNode = null; // Fiber对应的真实DOM节点
+
+  // 用于连接其他Fiber节点形成Fiber树
+  this.return = null; // 指向父级Fiber节点
+  this.child = null; // 指向子级Fiber节点
+  this.sibling = null; // 指向右边第一个兄弟Fiber节点
+  this.index = 0;
+
+  this.ref = null;
+
+  // 作为动态的工作单元的属性
+  this.pendingProps = pendingProps;
+  this.memoizedProps = null;
+  this.updateQueue = null;
+  this.memoizedState = null; //保存的对应组件的hook
+  this.dependencies = null;
+
+  this.mode = mode;
+
+  // Effects
+  this.flags = NoFlags;
+  this.subtreeFlags = NoFlags;
+  this.deletions = null;
+
+  // 调度优先级相关
+  this.lanes = NoLanes;
+  this.childLanes = NoLanes;
+
+  // 指向该fiber在另一次更新时对应的fiber
+  this.alternate = null;
+}
+```
+
+- ReactFiberHooks.new.js
+
+  - mount和update阶段 调用的是不同的hooks
+    - Mount: HooksDispatcherOnMount
+      - mountXXX
+    - Update: HooksDispatcherOnUpdate
+      - updateXXX
+
+  - useState的 callback返回函数 dispatchAction
+    - 接受本次update，并把本地的update 挂在到 hook.queue.pending环状链表
+
