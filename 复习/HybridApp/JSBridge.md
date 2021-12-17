@@ -8,7 +8,7 @@
 
 > JavaScript 调用 Native 的方式，主要有两种：
 
-- 注入 API 和 拦截 URL SCHEME。
+- 注入 API 和 拦截 URL 方案。
 
 ### 注入API
 

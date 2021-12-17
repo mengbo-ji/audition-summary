@@ -28,7 +28,7 @@ if (newCallbackPriority === SyncLanePriority) {
 
 1. 小顶堆 数据结构
 
-# render 协调阶段
+# render
 
 > 负责找出变化的组件
 
