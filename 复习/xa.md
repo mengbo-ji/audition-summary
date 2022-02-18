@@ -170,12 +170,12 @@
 
 ## react组件更新的整个过程
 
-- 调用 ReactDom.render 、this.setState、this.forceUpdate、useState的返回的回调函数（dispatchAction）触发更新
+- 调用 ReactDom.render 、this.setState、this.forceUpdate、useState的返回的回调函数（dispatchAction）触发更新，创建Update对象
 - 调用类组件的render方法或者函数组件本身，获取return 之后新的jsx
 - 调度器scheduler根据不同更新不同的优先级 选出优先级最高的更新进入协调器reconciler
-- 协调器reconciler 对比两颗 fiber树，找到不同，然后打上对应的标记，Placement、Update、Deletion
+- 协调器reconciler 对比current Fbier 和 workInprogress Fiber两颗 fiber树，找到不同，然后打上对应的标记，Placement、Update、Deletion
 
-> 上面这一步 随时会由于 浏览器空闲时间不够或者有更高优先级的事件发生而中断
+> 上面两步 随时会由于 浏览器空闲时间不够或者有更高优先级的事件发生而中断
 
 - 标记打完之后 交给渲染器renderer，渲染器根据不同的标记 作出不同的dom操作
 

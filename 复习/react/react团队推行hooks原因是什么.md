@@ -15,4 +15,6 @@
 
 6. hooks 可以发挥react18并发模式最大的优势
 
-   - react为18提供了一些 针对并发模式的hook `useDeferredValue` `useTransition` 而class是没有的
+   - react为18提供了一些 针对并发模式的hook
+   -  `useDeferredValue` `useTransition`  `startTransition`
+   - 而class是没有的
