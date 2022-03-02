@@ -50,6 +50,5 @@ componentWillReceiveProps(nextProps) {
 
 为了保证状态的连续性，当某个`Update`由于优先级低而被跳过时，保存在`baseUpdate`中的不仅是该`Update`，还包括链表中该`Update`之后的所有`Update`。
 
-那些在低优先级后面的高优先级任务可能会之后多次，所以这与同步更新的React表现不一致
-
+那些在低优先级后面的高优先级任务可能会渲染多次，所以这与同步更新的React表现不一致
 
